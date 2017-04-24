@@ -31,6 +31,8 @@ def SUPPORT_VERSION = "25.3.1"
 def RETROFIT_VERSION = "2.1.0"
 def JACKSON_VERSION = "2.8.8"
 
+repositories { jcenter() }
+
 dependencies {
     compile "com.android.support:support-annotations:$SUPPORT_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_VERSION"
@@ -53,4 +55,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.3.2'
+    testCompile 'org.mockito:mockito-core:2.7.22'
 }
