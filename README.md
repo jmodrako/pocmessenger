@@ -1,4 +1,4 @@
-# Nokia Messenger POC
+# Messenger POC
 
 Android Studio 2.3.1
 
