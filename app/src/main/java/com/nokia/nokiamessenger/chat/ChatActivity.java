@@ -3,6 +3,7 @@ package com.nokia.nokiamessenger.chat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.nokia.nokiamessenger.R;
+import com.nokia.nokiamessenger.chat.adapter.ChatListAdapter;
 import com.nokia.nokiamessenger.chat.data.ChatDataSource;
 import com.nokia.nokiamessenger.chat.data.ChatDataSourceImplementation;
 import com.nokia.nokiamessenger.chat.data.Message;
-import com.nokia.nokiamessenger.chat.adapter.ChatListAdapter;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,8 +38,13 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         setupRecyclerView();
         setupToolbar();
 
-        final ChatDataSource chatDataSource = new ChatDataSourceImplementation();
+        final ChatDataSource chatDataSource = createChatDataSource();
         chatPresenter = new ChatPresenter(chatDataSource);
+    }
+
+    @NonNull
+    protected ChatDataSource createChatDataSource() {
+        return new ChatDataSourceImplementation();
     }
 
     @Override
