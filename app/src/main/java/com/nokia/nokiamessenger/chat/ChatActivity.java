@@ -1,9 +1,8 @@
 package com.nokia.nokiamessenger.chat;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import com.nokia.nokiamessenger.chat.data.ChatDataSourceImplementation;
 import com.nokia.nokiamessenger.chat.data.Message;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
 
@@ -38,28 +36,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         setupRecyclerView();
         setupToolbar();
 
-        final ChatDataSource chatDataSource = createChatDataSource();
-        chatPresenter = new ChatPresenter(chatDataSource);
-    }
-
-    @NonNull
-    protected ChatDataSource createChatDataSource() {
-        return new ChatDataSourceImplementation();
+        chatPresenter = createChatPresenter();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         chatPresenter.attachView(this);
-
-        // Schedule loading for tests, library initialization, network request, etc.
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Actual data loading.
-                chatPresenter.loadData();
-            }
-        }, TimeUnit.SECONDS.toMillis(5));
+        chatPresenter.loadData();
     }
 
     @Override
@@ -107,6 +91,24 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 Toast.makeText(ChatActivity.this, "Wrong message input.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @NonNull
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    protected ChatPresenter createChatPresenter() {
+        return new ChatPresenter(createChatDataSource());
+    }
+
+    @NonNull
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    protected ChatDataSource createChatDataSource() {
+        return new ChatDataSourceImplementation();
+    }
+
+    @NonNull
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    protected ChatPresenter getChatPresenter() {
+        return chatPresenter;
     }
 
     private void setupMessageInput() {
