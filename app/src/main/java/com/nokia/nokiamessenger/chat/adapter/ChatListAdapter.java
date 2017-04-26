@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.nokia.nokiamessenger.R;
@@ -22,11 +23,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseListItemViewHolder
     private final List<Message> data = new ArrayList<>();
 
     private final LayoutInflater layoutInflater;
+    private final OnChatListItemClickListener itemClickListener;
     private final int mineMessageColor;
 
-    public ChatListAdapter(Context context) {
-        layoutInflater = LayoutInflater.from(context);
-        mineMessageColor = ContextCompat.getColor(context, R.color.primary_text_05);
+    public ChatListAdapter(Context context, OnChatListItemClickListener itemClickListener) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.mineMessageColor = ContextCompat.getColor(context, R.color.primary_text_05);
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseListItemViewHolder
     }
 
     @Override
-    public void onBindViewHolder(BaseListItemViewHolder holder, int position) {
+    public void onBindViewHolder(BaseListItemViewHolder holder, final int position) {
         final Message message = data.get(position);
         holder.withMessage(message);
 
@@ -66,6 +69,15 @@ public class ChatListAdapter extends RecyclerView.Adapter<BaseListItemViewHolder
         } else {
             holder.itemView.setBackground(null);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener != null) {
+                    itemClickListener.onChatListItemClick(position, message);
+                }
+            }
+        });
     }
 
     @Override

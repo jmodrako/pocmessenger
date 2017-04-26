@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.nokia.nokiamessenger.R;
 import com.nokia.nokiamessenger.chat.adapter.ChatListAdapter;
+import com.nokia.nokiamessenger.chat.adapter.OnChatListItemClickListener;
 import com.nokia.nokiamessenger.chat.data.ChatDataSource;
 import com.nokia.nokiamessenger.chat.data.ChatDataSourceImplementation;
 import com.nokia.nokiamessenger.chat.data.Message;
 
 import java.util.List;
 
-public class ChatActivity extends AppCompatActivity implements ChatView {
+public class ChatActivity extends AppCompatActivity implements ChatView, OnChatListItemClickListener {
 
     private ChatPresenter chatPresenter;
     private ChatListAdapter listAdapter;
@@ -139,7 +140,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        listAdapter = new ChatListAdapter(this);
+        listAdapter = new ChatListAdapter(this, this);
         recyclerView.setAdapter(listAdapter);
     }
 
@@ -152,5 +153,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         final int appendedIndex = listAdapter.appendMessage(message);
         listAdapter.notifyItemInserted(appendedIndex);
         recyclerView.scrollToPosition(listAdapter.getItemCount() - 1);
+    }
+
+    @Override
+    public void onChatListItemClick(int position, Message clickedMessage) {
+        Toast.makeText(this, "Clicked: " + clickedMessage.getContent().getType(),
+                Toast.LENGTH_SHORT).show();
     }
 }
